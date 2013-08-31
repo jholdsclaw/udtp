@@ -7,8 +7,8 @@ UDTP will try and remain as simple as possible. For client and servers: you init
 
 Supported languages
 ====
--C++
--Objective-C (With Cocoa Touch in mind)
+C++
+Objective-C (With Cocoa Touch in mind)
 
 Status
 ====
