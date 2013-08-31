@@ -50,7 +50,7 @@ int UDTP::startServer(int m_iPort){
 }
 
 
-/*	Method: startClient()
+/*	Method: startClient(char* DESTINATION_ADDRESS, int DESTINATION_PORT)
 	Usage: Starts a client socket
 	Return: 0 on successful
 			1 socket has been initialized already!
@@ -70,5 +70,10 @@ int UDTP::startClient(char* m_chAddress, int m_iPort){
 	return 1;
 
 }
-
-
+/*	This will be the threading for all things such as receiving data, sending data, and everything else.
+	It will all be declared in the argument for it's use.
+*/
+void* UDTP::openThread(void* args){
+	struct m_sThreadProperties *sProperties = (struct m_sThreadProperties *)args;
+	return (int*) 0;
+}
