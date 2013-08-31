@@ -1,58 +1,74 @@
 //============================================================================
-// Name        : udtp.cpp
-// Author      : 
-// Version     :
+// Name        : UDP-based file transfer (UDTP)
+// Author      : Lucky
+// Version     : 0.1
 // Copyright   : Your copyright notice
-// Description : Hello World in C++, Ansi-style
+// Description :
 //============================================================================
+#include "udtp.h"
 
-#include <iostream>
-#include <pthread.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <sys/time.h>
-#include <semaphore.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <ctime>
-#include <time.h>
-#include <string>
-#include <cstring>
-#include <unistd.h>
-#include <vector>
-#include <sstream>
-#include <fstream>
-#include <poll.h>
-
-using namespace std;
-struct data{
-	int id;
-	string name;
-};
-
-void* exampleThread(void* data){
-	struct data *data_ptr = (struct data*)data;
-	cout << data_ptr ->name << " " << data_ptr->id << endl;
-	return NULL;
+int UDTP::getSocket(){
+	return m_iSocket;
 }
 
-bool createThread(int counter){
-	pthread_t t1;
-	data pass_data;
-	pass_data.id = counter;
-	pass_data.name = "Thread";
-	pthread_create(&t1, NULL, exampleThread, &pass_data);
-	pthread_join(t1, NULL);
-	return true;
+int UDTP::getPort(){
+	return m_iPort;
 }
-
-int main(int argc, char* argv) {
-	for(int i=0; i<1000; i++){
-		createThread(i);
+char* UDTP::getDestination(){
+	return m_chAddress;
+}
+/*	Method: startServer()
+	Usage: Starts the server.
+	Return: 0 on successful
+			1 socket has been initialized already!
+			2 could not bind
+			3 could not listen
+*/
+int UDTP::startServer(int m_iPort){
+	if(!m_bInitialized){
+	memset(&m_sAddress, 0, sizeof(m_sAddress));
+	m_sAddress.sin_port = htons(m_iPort);
+	m_sAddress.sin_family = AF_INET;
+	m_sAddress.sin_addr.s_addr = INADDR_ANY;
+	m_iSocket = socket(AF_INET, SOCK_STREAM,0);
+	if((bind(m_iSocket, (struct sockaddr*)&m_sAddress, sizeof(m_sAddress)))<0){
+		perror("bind");
+		return 2;
 	}
-
+	if((listen(m_iSocket, 0))<0){
+		perror("listen");
+		return 3;
+	}
+	m_bServer = true;
+	m_bInitialized = true;
 	return 0;
 
+	}
+
+	// Socket has already been initialized! Do not initialize again!
+	return 1;
 }
+
+
+/*	Method: startClient()
+	Usage: Starts a client socket
+	Return: 0 on successful
+			1 socket has been initialized already!
+
+*/
+int UDTP::startClient(char* m_chAddress, int m_iPort){
+	if(!m_bInitialized){
+		memset(&m_sDestination, 0, sizeof(m_sDestination));
+		m_sDestination.sin_addr.s_addr = atoi(m_chAddress);
+		m_sDestination.sin_port = htons(m_iPort);
+		m_sDestination.sin_family = AF_INET;
+		m_bServer = false;
+		return 0;
+	}
+
+	// Socket has been initialized already! Don't do this again!
+	return 1;
+
+}
+
+
