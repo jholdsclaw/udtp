@@ -31,7 +31,7 @@ int UDTP::startServer(int iPort){
 		m_sAddress.sin_port = htons(m_iPort);
 		m_sAddress.sin_family = AF_INET;
 		m_sAddress.sin_addr.s_addr = INADDR_ANY;
-		m_iSocket = socket(AF_INET, SOCK_STREAM,0);
+		m_iSocket = socket(AF_INET, SOCK_DGRAM,0);
 	if((bind(m_iSocket, (struct sockaddr*)&m_sAddress, sizeof(m_sAddress)))<0){
 		perror("bind");
 		return 2;
@@ -69,6 +69,7 @@ int UDTP::startClient(char* chAddress, int iPort){
 		m_sDestination.sin_addr.s_addr = atoi(m_chAddress);
 		m_sDestination.sin_port = htons(m_iPort);
 		m_sDestination.sin_family = AF_INET;
+		m_iSocket = socket(AF_INET, SOCK_DGRAM, 0);
 		m_bServer = false;
 		pthread_create(&m_MainThread, NULL, &UDTP::processThread, (void*)this);
 		pthread_tryjoin_np(m_MainThread, NULL);
