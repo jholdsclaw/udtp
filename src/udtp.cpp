@@ -102,6 +102,11 @@ void *UDTP::processThread(void* args){
 			struct sockaddr_storage addr;
 			socklen_t fromlen = sizeof(addr);
 			int iByteCount = recvfrom(CProperties->m_iSocket, buffer, sizeof (buffer),0, (struct sockaddr*)&addr, &fromlen);
+			/*	Find out if it is an acknowledgement or a split file (in order to split into another thread)
+				If it is a split file being received then have it be processed by creating a new thread of openThread
+				passing on m_sThreadProperties with all the information it needs
+				to identify itself with what file it should be recvfrom'ing in.
+			*/
 		}else{
 			//Client processThread here
 
