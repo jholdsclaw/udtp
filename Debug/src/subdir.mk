@@ -4,15 +4,21 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
+../src/file.cpp \
 ../src/main.cpp \
+../src/packet.cpp \
 ../src/udtp.cpp 
 
 OBJS += \
+./src/file.o \
 ./src/main.o \
+./src/packet.o \
 ./src/udtp.o 
 
 CPP_DEPS += \
+./src/file.d \
 ./src/main.d \
+./src/packet.d \
 ./src/udtp.d 
 
 
