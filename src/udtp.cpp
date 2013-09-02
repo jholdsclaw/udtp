@@ -94,20 +94,19 @@ int UDTP::close(){
 void *UDTP::processThread(void* args){
 	//Not working! Find out how to pass member variables to thread!
 	UDTP *CProperties = (UDTP*) args;
-	if(CProperties->m_bServer){
 
-		while(CProperties->m_bAlive){
+	while(CProperties->m_bAlive){
+		if(CProperties->m_bServer){
+			//Server processThread programming here
+			char buffer[SPLIT_SIZE];
+			struct sockaddr_storage addr;
+			socklen_t fromlen = sizeof(addr);
+			int iByteCount = recvfrom(CProperties->m_iSocket, buffer, sizeof (buffer),0, (struct sockaddr*)&addr, &fromlen);
+		}else{
+			//Client processThread here
 
-			poll(0, 0, 100);
 		}
-	}else{
-
-		while(CProperties->m_bAlive){
-
-			poll(0, 0, 100);
-		}
-
-
+	poll(0, 0, 100);
 	}
 
 	return NULL;
