@@ -15,6 +15,7 @@ int main(int argc, char* argv[]){
 	std::cout << "Result " << result << " and Port is " << master.getPort() << std::endl;
 	while(true){
 
+		poll(0,0,100);
 	}
 	return 0;
 }

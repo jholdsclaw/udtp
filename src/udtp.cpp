@@ -25,7 +25,7 @@ char* UDTP::getDestination(){
 			3 could not listen
 */
 int UDTP::startServer(int iPort){
-	if(!m_bInitialized){
+	if(!m_bAlive){
 		UDTP::m_iPort = iPort;
 		memset(&m_sAddress, 0, sizeof(m_sAddress));
 		m_sAddress.sin_port = htons(m_iPort);
@@ -36,16 +36,13 @@ int UDTP::startServer(int iPort){
 		perror("bind");
 		return 2;
 	}
-	if((listen(m_iSocket, 0))<0){
-		perror("listen");
-		return 3;
-	}
 	m_bServer = true;
-	m_bInitialized = true;
+	m_bAlive = true;
 
 
-	pthread_create(&m_MainThread, NULL, &UDTP::processThread, NULL);
+	pthread_create(&m_MainThread, NULL, &UDTP::processThread, (UDTP*)this);
 	pthread_tryjoin_np(m_MainThread, NULL);
+
 	return 0;
 
 	}
@@ -62,7 +59,7 @@ int UDTP::startServer(int iPort){
 
 */
 int UDTP::startClient(char* chAddress, int iPort){
-	if(!m_bInitialized){
+	if(!m_bAlive){
 		UDTP::m_chAddress = chAddress;
 		UDTP::m_iPort = iPort;
 		memset(&m_sDestination, 0, sizeof(m_sDestination));
@@ -71,8 +68,9 @@ int UDTP::startClient(char* chAddress, int iPort){
 		m_sDestination.sin_family = AF_INET;
 		m_iSocket = socket(AF_INET, SOCK_DGRAM, 0);
 		m_bServer = false;
-		pthread_create(&m_MainThread, NULL, &UDTP::processThread, (void*)this);
-		pthread_tryjoin_np(m_MainThread, NULL);
+		m_bAlive = true;
+		pthread_create(&m_MainThread, NULL, &UDTP::processThread, (UDTP*)this);
+			pthread_tryjoin_np(m_MainThread, NULL);
 		return 0;
 	}
 
@@ -81,8 +79,8 @@ int UDTP::startClient(char* chAddress, int iPort){
 
 }
 int UDTP::close(){
-	if(m_bInitialized){
-		m_bInitialized = false;
+	if(m_bAlive){
+		m_bAlive = false;
 	}
 	return 0;
 
@@ -96,9 +94,20 @@ int UDTP::close(){
 void *UDTP::processThread(void* args){
 	//Not working! Find out how to pass member variables to thread!
 	UDTP *CProperties = (UDTP*) args;
-	while(true){
+	if(CProperties->m_bServer){
 
-	poll(0, 0, 1000);
+		while(CProperties->m_bAlive){
+
+			poll(0, 0, 100);
+		}
+	}else{
+
+		while(CProperties->m_bAlive){
+
+			poll(0, 0, 100);
+		}
+
+
 	}
 
 	return NULL;

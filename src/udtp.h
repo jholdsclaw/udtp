@@ -38,7 +38,7 @@
 class UDTP{
 
 public:
-	UDTP() { m_bInitialized = false; m_iPort = 0;};
+	UDTP() { m_bAlive = false; m_iPort = 0;};
 	~UDTP() {};
 	//Usage: UDTP(bool m_bServerSocket, struct sockaddr_in sDestination)
 	int getSocket();
@@ -62,7 +62,7 @@ private:
 	//Both properties
 	bool m_bServer; // Is it a server?
 	int m_iSocket; //Socket file descriptor, may remove retrieval function because UDTP makes your shit simple!
-	bool m_bInitialized; //Was it initialized?
+	bool m_bAlive; //Is it running?
 	int m_iPort; //What is the port number?
 	pthread_t m_MainThread;
 
