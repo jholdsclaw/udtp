@@ -97,12 +97,14 @@ void *UDTP::processThread(void* args){
 
 	while(CProperties->m_bAlive){
 		if(CProperties->m_bServer){
+
 			//Server processThread programming here
 			char buffer[SPLIT_SIZE];
 			struct sockaddr_storage addr;
 			socklen_t fromlen = sizeof(addr);
-			int iByteCount = recvfrom(CProperties->m_iSocket, buffer, sizeof (buffer),0, (struct sockaddr*)&addr, &fromlen);
-			/*	Find out if it is an acknowledgement or a split file (in order to split into another thread)
+			int iByteCount = recvfrom(CProperties->m_iSocket, buffer, sizeof (buffer), MSG_PEEK, (struct sockaddr*)&addr, &fromlen);
+			std::cout << buffer << std::endl;
+			/*	Find out if it is an acknowledgment or a split file (in order to split into another thread)
 				If it is a split file being received then have it be processed by creating a new thread of openThread
 				passing on m_sThreadProperties with all the information it needs
 				to identify itself with what file it should be recvfrom'ing in.
@@ -122,6 +124,7 @@ void *UDTP::processThread(void* args){
 */
 void* UDTP::openThread(void* args){
 	struct m_sThreadProperties *sProperties = (struct m_sThreadProperties *)args;
+
 	return (int*) 0;
 }
 

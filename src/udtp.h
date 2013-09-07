@@ -14,6 +14,7 @@
 #include <unistd.h>
 #include <iostream>
 #include <vector>
+#include <ctime>
 #include <sstream>
 #include <fstream>
 //Check if Windows or BSD ready platform
@@ -33,7 +34,7 @@
 
 #define SPLIT_SIZE 2500
 //Both send and receive threads cumulatively
-#define MAXIMUM_THREADS 10
+//#define MAXIMUM_THREADS 10
 
 class UDTP{
 
@@ -66,13 +67,15 @@ private:
 	int m_iPort; //What is the port number?
 	pthread_t m_MainThread;
 
-	pthread_t rgOpenThreads[MAXIMUM_THREADS];
+	std::vector<pthread_t> rgOpenThreads;
+
 	struct m_sThreadProperties{
 		/*	0 - Receiving Data (This will loop)
 		 *  1 - Send Data
 		 *  2 - Acknowledgement
 		 */
 		int iType;
+
 		std::vector<char> vData;
 	};
 };

@@ -7,18 +7,21 @@ CPP_SRCS += \
 ../src/file.cpp \
 ../src/main.cpp \
 ../src/packet.cpp \
+../src/thread.cpp \
 ../src/udtp.cpp 
 
 OBJS += \
 ./src/file.o \
 ./src/main.o \
 ./src/packet.o \
+./src/thread.o \
 ./src/udtp.o 
 
 CPP_DEPS += \
 ./src/file.d \
 ./src/main.d \
 ./src/packet.d \
+./src/thread.d \
 ./src/udtp.d 
 
 
