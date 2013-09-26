@@ -13,6 +13,7 @@
  * */
 #include <iostream>
 #include <fstream>
+#include <iomanip>
 #include <vector>
 #include <cstring>
 #include <string>
@@ -26,8 +27,8 @@ vector<int> split_this_shit;
 int main(int argc, char* argv[]){
 	
 	ifstream open_file("logo_myDog.png", ios::binary);
-		char* fucking_file_data;
 		int file_size;
+	char* fucking_file_data = new char[46028];
 	if(open_file.is_open()){
 		open_file.seekg(0, open_file.end);
 		cout << open_file.tellg() << endl;
@@ -52,10 +53,12 @@ int main(int argc, char* argv[]){
 			split.push_back(read_data);
 			
 		}*/
-
-	fucking_file_data = new char[file_size];
 		for(int i=0; i<=packets; i++){
 			memcpy(&fucking_file_data[i], split[i], split_this_shit[i]);
+			cout.write(&fucking_file_data[i],split_this_shit[i]);
+			cout << " - ";
+			cout.write((char *)split[i],split_this_shit[i]);
+			cout << endl;
 		}
 
 	}
